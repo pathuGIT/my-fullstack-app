@@ -1,0 +1,10 @@
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.posts .post {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}/*# sourceMappingURL=Home.css.map */
