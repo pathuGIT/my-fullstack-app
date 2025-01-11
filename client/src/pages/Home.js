@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom'
 
 function Home() {
     const [posts, setPosts] = useState([]);
+    const [limitCont, setLimitCount] = useState(0);
+    const [searchid, setSearchid] = useState(0);
 
     useEffect(() => {
         fetchPosts()
-        .then((response) => setPosts(response.data))
-        .catch((error) => console.error('Error fetching posts:', error));
+            .then((response) => setPosts(response.data))
+            .catch((error) => console.error('Error fetching posts:', error));
     }, [])
 
     const handleDelete = (id) => {
@@ -18,11 +20,31 @@ function Home() {
         console.log(id)
     };
 
+    const handleLimit = () => {
+        fetchPosts({ limit: limitCont })
+            .then((response) => setPosts(response.data))
+            .catch((error) => console.error('Error limit posts:', error));
+    }
+
     return (
         <div>
             <h1>Posts</h1>
 
             <div className="posts">
+                <div class="post-menu">
+                    <div class="add-post">
+                        <button><Link to={`/new-post`}>New Post</Link></button>
+                    </div>
+                    <div class="limit">
+                        <input type="number" onChange={(e)=>setLimitCount(e.target.value)} /> 
+                        <button onClick={handleLimit}>Limit</button>
+                    </div>
+                    <div class="search-post">
+                        <input type="number" onChange={(e)=>setSearchid(e.target.value)} /> 
+                        <button><Link to={`/search/${searchid}`}>Search By Id</Link></button>
+                    </div>
+                </div>
+
                 {posts.map((post) => (
                     <div className="post" key={post.id}>
                         <div className="option">

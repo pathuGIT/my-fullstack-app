@@ -3,7 +3,8 @@ import axios from "axios";
 const api_base_url = 'http://localhost:8000/api/posts';
 
 // Fetch all posts
-export const fetchPosts = () => axios.get(api_base_url);
+//export const fetchPosts = () => axios.get(api_base_url);
+export const fetchPosts = (params = {}) => axios.get(api_base_url, { params });
 
 // Fetch a post
 export const fetchPost = (id) => axios.get(`${api_base_url}/${id}`);
