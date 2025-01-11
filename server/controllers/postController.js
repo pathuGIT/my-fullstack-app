@@ -1,100 +1,122 @@
-let posts = [
-    {
-        id: 1,
-        title: 'First Post',
-        content: 'This is the content of the first post'
-    },
-    {
-        id: 2,
-        title: 'Second Post',
-        content: 'This is the content of the second post'
-    }
-];
+import mongoose from 'mongoose';
+import Post from "../models/post.model.js";
 
 // @desc   Get all posts
 // @route  GET /api/posts
-export const getPosts = (req,res,next) => {
+export const getPosts = async (req, res, next) => {
     const limit = parseInt(req.query.limit);
-    
-    if(!isNaN(limit) && limit>0){
-        return res.status(200).json(posts.slice(0,limit));
+    try {
+        const posts = await Post.find({});
+        if (!isNaN(limit) && limit > 0) {
+            return res.status(200).json(posts.slice(0, limit));
+        }
+        res.status(200).json(posts);
+    } catch (error) {
+        next(error);
     }
-    
-    res.status(200).json(posts)
-}
+};
 
 // @desc   Get post
 // @route  GET /api/posts/:id
-export const getPost = (req,res,next) => {
-    const id = parseInt(req.params.id);
-    //res.send(posts.filter((e) => e.id === id)); //use filter method to get data
-    const post = posts.find((e) => e.id === id); //use find method to get data
-    
-    if(!post){
-        //return res.status(404).json({msg:`A post with id of ${id} not found.`});
-        
-        const error = new Error(`A post with id of ${id} not found.`);
-        error.status = 404;
-        return next(error);
-    }
+export const getPost = async (req, res, next) => {
+    const { id } = req.params;
 
-    res.status(200).json(post);
-    
-}
-
-// @desc   Create new post
-// @route  POST /api/posts
-export const createPost = (req,res,next) => {
-    const newPost = {
-        id: posts.length + 1,
-        title: req.body.title,
-        content: req.body.content
-    }
-
-    if(!newPost.title || !newPost.content){
-        //res.status(400).json({msg:`Please include all things.`})
-        
-        const error = new Error(`Please include all things.`);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const error = new Error(`Invalid post ID: ${id}`);
         error.status = 400;
         return next(error);
     }
-    posts.push(newPost); //add new object to array
-    res.status(201).json(posts); //send back it
-}
+
+    try {
+        const post = await Post.findById(id);
+
+        if (!post) {
+            const error = new Error(`A post with id of ${id} not found.`);
+            error.status = 404;
+            return next(error);
+        }
+
+        res.status(200).json(post);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc   Create new post
+// @route  POST /api/posts
+export const createPost = async (req, res, next) => {
+    const { title, content } = req.body;
+
+    if (!title || !content) {
+        const error = new Error(`Please include all required fields.`);
+        error.status = 400;
+        return next(error);
+    }
+
+    try {
+        const newPost = await Post.create({ title, content });
+        const posts = await Post.find({});
+        res.status(201).json(posts);
+    } catch (error) {
+        next(error);
+    }
+};
 
 // @desc   Update a post
 // @route  PUT /api/posts/:id
-export const updatePost = (req, res, next) => {
-    const id = parseInt(req.params.id);
-    const post = posts.find((e) => e.id === id);
+export const updatePost = async (req, res, next) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
 
-    if(!post){
-        //return res.status(404).json({msg:`A post with id of ${id} not found.`});
-
-        const error = new Error(`A post with id of ${id} not found.`);
-        error.status = 404;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const error = new Error(`Invalid post ID: ${id}`);
+        error.status = 400;
         return next(error);
     }
 
-    post.title = req.body.title;
-    post.content = req.body.content;
-    res.status(200).json(posts);
-}
+    try {
+        const post = await Post.findById(id);
+
+        if (!post) {
+            const error = new Error(`A post with id of ${id} not found.`);
+            error.status = 404;
+            return next(error);
+        }
+
+        post.title = title;
+        post.content = content;
+        await post.save();
+
+        const posts = await Post.find({});
+        res.status(200).json(posts);
+    } catch (error) {
+        next(error);
+    }
+};
 
 // @desc   Delete a post
 // @route  DELETE /api/posts/:id
-export const deletePost = (req, res, next) => {
-    const id = parseInt(req.params.id);
-    const post = posts.find((e) => e.id === id);
+export const deletePost = async (req, res, next) => {
+    const { id } = req.params;
 
-    if(!post){
-        //return res.status(404).json({msg:`A post with id of ${id} not found.`});
-
-        const error = new Error(`A post with id of ${id} not found.`);
-        error.status = 404;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const error = new Error(`Invalid post ID: ${id}`);
+        error.status = 400;
         return next(error);
     }
 
-    posts = posts.filter((e) => e.id !== id);
-    res.status(200).json(posts);
-}
+    try {
+        const post = await Post.findByIdAndDelete(id);
+
+        if (!post) {
+            const error = new Error(`A post with id of ${id} not found.`);
+            error.status = 404;
+            return next(error);
+        }
+
+        const posts = await Post.find({});
+        res.status(200).json(posts);
+    } catch (error) {
+        next(error);
+    }
+};
