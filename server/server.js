@@ -41,8 +41,7 @@ app.use(errorHandler);
 //connect throgh mongoose
 mongoose
     .connect(
-        //"mongodb+srv://flexicraftcon:wojo1234%40@cluster0.pw5ci.mongodb.net/Project-0?retryWrites=true&w=majority&appName=Cluster0"
-        `mongodb+srv://flexicraftcon:${pswd}@cluster0.pw5ci.mongodb.net/Project-0?retryWrites=true&w=majority&appName=Cluster0`
+         `mongodb+srv://flexicraftcon:${pswd}@cluster0.pw5ci.mongodb.net/Project-0?retryWrites=true&w=majority&appName=Cluster0`
     )
     .then(() => {
         console.log("Connected to database!");

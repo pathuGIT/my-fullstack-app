@@ -17,17 +17,19 @@ function NewPost() {
     <div>
         <h2>NewPost</h2>
         <table>
-            <tr>
-                <td>Add Title: </td>
-                <td><input type="text" onChange={(e)=>setTitle(e.target.value)} /></td>
-            </tr>
-            <tr>
-                <td>Add Content: </td>
-                <td><textarea name=""  onChange={(e)=>setContent(e.target.value)} ></textarea></td>
-            </tr>
-            <tr>
-                <td><button onClick={handleSave}>Save</button></td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td>Add Title: </td>
+                    <td><input type="text" onChange={(e) => setTitle(e.target.value)} /></td>
+                </tr>
+                <tr>
+                    <td>Add Content: </td>
+                    <td><textarea onChange={(e) => setContent(e.target.value)}></textarea></td>
+                </tr>
+                <tr>
+                    <td colSpan="2"><button onClick={handleSave}>Save</button></td>
+                </tr>
+            </tbody>
         </table>
     </div>
   )

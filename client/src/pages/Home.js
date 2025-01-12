@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { fetchPosts, deletePost } from '../api/ApiService';
-import { Link } from 'react-router-dom'
-
+import { fetchPosts, deletePost } from '../api/ApiService.js';
+import { Link, useNavigate } from 'react-router-dom'
 function Home() {
     const [posts, setPosts] = useState([]);
     const [limitCont, setLimitCount] = useState(0);
-    const [searchid, setSearchid] = useState(0);
+    const [searchTitle, setSearchTitle] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchPosts()
+        fetchPosts({ limit: 0 })
             .then((response) => setPosts(response.data))
             .catch((error) => console.error('Error fetching posts:', error));
+            
     }, [])
 
     const handleDelete = (id) => {
@@ -25,31 +26,38 @@ function Home() {
             .then((response) => setPosts(response.data))
             .catch((error) => console.error('Error limit posts:', error));
     }
-
+    const handleSearch = (e) => {
+        if (!searchTitle.trim()) {
+            e.preventDefault();
+            console.log("Please enter a title to search.")
+        } else {
+            navigate(`/search/${searchTitle.trim()}`);
+        }
+    };
     return (
         <div>
             <h1>Posts</h1>
 
             <div className="posts">
-                <div class="post-menu">
-                    <div class="add-post">
+                <div className="post-menu">
+                    <div className="add-post">
                         <button><Link to={`/new-post`}>New Post</Link></button>
                     </div>
-                    <div class="limit">
+                    <div className="limit">
                         <input type="number" onChange={(e)=>setLimitCount(e.target.value)} /> 
                         <button onClick={handleLimit}>Limit</button>
                     </div>
-                    <div class="search-post">
-                        <input type="number" onChange={(e)=>setSearchid(e.target.value)} /> 
-                        <button><Link to={`/search/${searchid}`}>Search By Id</Link></button>
+                    <div className="search-post">
+                        <input type="text" onChange={(e)=>setSearchTitle(e.target.value)} /> 
+                        <button onClick={handleSearch}>Search By Title</button>
                     </div>
                 </div>
 
                 {posts.map((post) => (
-                    <div className="post" key={post.id}>
+                    <div className="post" key={post._id}>
                         <div className="option">
-                            <button><Link to={`/update/${post.id}`}>Update</Link></button>
-                            <button onClick={() => handleDelete(post.id)}>Delete</button>
+                            <button><Link to={`/update/${post._id}`}>Update</Link></button>
+                            <button onClick={() => handleDelete(post._id)}>Delete</button>
                         </div>
                         <p>{post.title}</p>
                         <p>{post.content}</p>

@@ -42,6 +42,26 @@ export const getPost = async (req, res, next) => {
     }
 };
 
+// @desc   Get post by title
+// @route  GET /api/posts/:title
+export const getPostsByTitle = async (req, res, next) => {
+    const { title } = req.params;
+
+    try{
+        const posts = await Post.find({title: new RegExp(title, 'i')});
+        
+        if(posts.length === 0){
+            const error = new Error(`No post found with title: ${title}`);
+            error.status = 404;
+            return next(error);
+        } 
+        res.status(200).json(posts);
+    } catch (error) {
+        next(error);
+    } 
+
+}
+
 // @desc   Create new post
 // @route  POST /api/posts
 export const createPost = async (req, res, next) => {

@@ -7,7 +7,10 @@ const api_base_url = 'http://localhost:8000/api/posts';
 export const fetchPosts = (params = {}) => axios.get(api_base_url, { params });
 
 // Fetch a post
-export const fetchPost = (id) => axios.get(`${api_base_url}/${id}`);
+export const fetchPost = (id) => axios.get(`${api_base_url}/id/${id}`);
+
+// Fetch a post
+export const fetchPostByTitle = (title) => axios.get(`${api_base_url}/title/${title}`);
 
 // Create new post
 export const newPost = (data) => axios.post(api_base_url,data);

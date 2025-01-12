@@ -11,13 +11,20 @@ function UpdatePost() {
 
     useEffect(() => {
         fetchPost(id)
-            .then((response) => setPost(response.data))
+            .then((response) => {
+                setPost(response.data)
+                setTitle(response.data.title)
+                setContent(response.data.content)
+            })
             .catch((error) => console.error('Error fetching the post:', error));
 
     }, [id])
 
     const handleUpdate = () => {
-        updatePost(id, {"title":title, "content":content})
+        const updtTitle = title.trim() ? title : post.title;
+        const updtContent = content.trim() ? content : post.concat;
+
+        updatePost(id, {"title":updtTitle, "content":updtContent})
             .then(() => navigate('/'))
             .catch((error) => console.error('Error updating item:', error));    
     }
