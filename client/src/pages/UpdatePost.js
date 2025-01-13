@@ -30,11 +30,11 @@ function UpdatePost() {
     }
 
     return (
-        <div>
-            <h2>Hello</h2>
-            <input type="text" onChange={(e)=>setTitle(e.target.value)} placeholder={post.title} />
-            <textarea name="" onChange={(e)=>setContent(e.target.value)} placeholder={post.content}></textarea>
-            <button onClick={handleUpdate}>Update</button>
+        <div className= ' container mx-auto p-4 border'>
+            <h2 className=' text-2xl mb-16'>Update The Post</h2>
+            <input type="text" className=' border block mb-2 w-2/5' onChange={(e)=>setTitle(e.target.value)} placeholder={post.title} />
+            <textarea name="" className=' border block mb-4 w-2/5' onChange={(e)=>setContent(e.target.value)} placeholder={post.content}></textarea>
+            <button  className='block border px-4 py-2 bg-sky-500 rounded' onClick={handleUpdate}>Update</button>
         </div>
     )
 }
