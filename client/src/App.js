@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <main>
+      <main className=' px-60 absolute top-32 w-full max-xl:px-0'>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/update/:id' element={<UpdatePost />} />

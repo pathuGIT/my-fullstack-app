@@ -27,7 +27,7 @@ function Tailwind() {
                     <img src={hamburgerIcon} onClick={()=> setDisplay(display === false ? true : false)} alt="logo" class="absolute right-0 cursor-pointer h-3 m-2" />
                 </div>
 
-                <div id='toggle' className={`border flex list-none p-1 relative max-md:flex-col ${display ? 'block' : 'hidden'}`}>
+                <div id='toggle' className={`border bg-neutral-50 flex list-none p-1 relative z-20 max-md:flex-col ${display ? 'block' : 'hidden'}`}>
                     <li className='p-2 cursor-pointer hover:bg-slate-50'>Home</li>
                     <li className='p-2 cursor-pointer hover:bg-slate-50'>About</li>
                     <li className='p-2 cursor-pointer hover:bg-slate-50'>Contact</li>
@@ -43,6 +43,10 @@ function Tailwind() {
                 </div >
 
             </nav>
+
+            <div id='body-section' className=' bg-slate-500 w-full h-96 absolute top-44 z-10 '>
+                Heloo
+            </div>
         </div>
     )
 }

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPosts, deletePost } from '../api/ApiService.js';
 import { Link, useNavigate } from 'react-router-dom';
+import searchIcon from '../public/magnifying-glass_12080183.png';
 
 function Home() {
     const [posts, setPosts] = useState([]);
@@ -10,10 +11,14 @@ function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchPosts({ limit: 0 })
+        if (limitCont > posts.length)
+            setLimitCount();
+        fetchPosts({ limit: limitCont })
             .then((response) => setPosts(response.data))
             .catch((error) => console.error('Error fetching posts:', error));
-    }, []);
+
+        console.log("le" + posts.length)
+    }, [limitCont]);
 
     const handleDelete = (id) => {
         deletePost(id)
@@ -22,15 +27,8 @@ function Home() {
         console.log(id);
     };
 
-    const handleLimit = () => {
-        fetchPosts({ limit: limitCont })
-            .then((response) => setPosts(response.data))
-            .catch((error) => console.error('Error limit posts:', error));
-    };
-
     const handleSearch = (e) => {
         if (!searchTitle.trim()) {
-            e.preventDefault();
             alert('Please enter a title to search.');
         } else {
             navigate(`/search/${searchTitle.trim()}`);
@@ -38,42 +36,35 @@ function Home() {
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 border bg-neutral-50 ">
             <h1 className="text-2xl font-bold mb-4">Posts</h1>
-            <p><Link to={`/tailwind`}  className=' border-b-2 hover:bg-sky-100'>move to tailwind</Link></p>
+            <p><Link to={`/tailwind`} className=' border-b-2 hover:bg-sky-100'>move to tailwind</Link></p>
 
             <div className=" mt-10">
-                <div className="post-menu flex space-x-4 mb-4">
-                    <div>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                            <Link to={`/new-post`}>New Post</Link>
-                        </button>
-                    </div>
+                <div className="post-menu grid grid-flow-col justify-stretch mb-4 max-xl:block space-x-0">
                     <div className="limit">
                         <input
                             type="number"
                             className="border px-2 py-1"
                             onChange={(e) => setLimitCount(e.target.value)}
+                            placeholder='Limit'
                         />
-                        <button
-                            className="bg-green-500 text-white px-4 py-2 rounded ml-2"
-                            onClick={handleLimit}
-                        >
-                            Limit
-                        </button>
                     </div>
-                    <div className="search-post">
+                    <div className="flex space-x-2">
                         <input
                             type="text"
-                            className="border px-2 py-1"
+                            className="border px-2"
                             onChange={(e) => setSearchTitle(e.target.value)}
+                            placeholder='Search By Titile'
                         />
                         <button
-                            className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
+                            className=''
                             onClick={handleSearch}
                         >
-                            Search By Title
+                            <img src={searchIcon} alt="logo" class=" cursor-pointer my-auto h-7" />
+
                         </button>
+
                     </div>
                 </div>
 
@@ -86,9 +77,7 @@ function Home() {
                             <button
                                 className="bg-red-500 text-white px-4 py-2 rounded"
                                 onClick={() => handleDelete(post._id)}
-                            >
-                                Delete
-                            </button>
+                            >Delete</button>
                         </div>
                         <h3 className="text-xl font-bold">{post.title}</h3>
                         <p>{post.content}</p>
